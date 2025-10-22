@@ -10,6 +10,10 @@ import NotificationsPage from './pages/NotificationsPage';
 import MessagesPage from './pages/MessagesPage';
 import BrowsePage from './pages/BrowsePage';
 import TrendingPage from './pages/TrendingPage';
+import HelpCenterPage from './pages/HelpCenterPage';
+import SafetyTipsPage from './pages/SafetyTipsPage';
+import ContactUsPage from './pages/ContactUsPage';
+import ReportIssuePage from './pages/ReportIssuePage';
 import LearnMorePage from './pages/LearnMorePage';
 import DashboardPage from './pages/DashboardPage';
 import { AuthProvider, useAuth } from './firebase/AuthProvider';
@@ -88,7 +92,7 @@ export default function App() {
 function AppContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [view, setView] = useState<'home' | 'login' | 'signup' | 'sell' | 'notifications' | 'messages' | 'browse' | 'trending' | 'learn' | 'dashboard'>('home');
+  const [view, setView] = useState<'home' | 'login' | 'signup' | 'sell' | 'notifications' | 'messages' | 'browse' | 'trending' | 'learn' | 'dashboard' | 'help' | 'safety' | 'contact' | 'report'>('home');
   const { user } = useAuth();
 
   // Use effect to automatically move to dashboard when user signs in
@@ -230,6 +234,10 @@ function AppContent() {
   {view === 'trending' && <TrendingPage onBack={() => setView('home')} />}
   {view === 'learn' && <LearnMorePage onBack={() => setView('home')} />}
   {view === 'dashboard' && <DashboardPage onBack={() => setView('home')} />}
+  {view === 'help' && <HelpCenterPage onBack={() => setView('home')} />}
+  {view === 'safety' && <SafetyTipsPage onBack={() => setView('home')} />}
+  {view === 'contact' && <ContactUsPage onBack={() => setView('home')} />}
+  {view === 'report' && <ReportIssuePage onBack={() => setView('home')} />}
 
       {/* Features and CTA are handled above (rendered only for unauthenticated users) */}
     </main>
@@ -261,10 +269,18 @@ function AppContent() {
           <div>
             <h4 className="font-semibold mb-4">Support</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li>Help Center</li>
-              <li>Safety Tips</li>
-              <li>Contact Us</li>
-              <li>Report Issue</li>
+              <li>
+                <button className="hover:text-white transition-colors" onClick={() => setView('help')}>Help Center</button>
+              </li>
+              <li>
+                <button className="hover:text-white transition-colors" onClick={() => setView('safety')}>Safety Tips</button>
+              </li>
+              <li>
+                <button className="hover:text-white transition-colors" onClick={() => setView('contact')}>Contact Us</button>
+              </li>
+              <li>
+                <button className="hover:text-white transition-colors" onClick={() => setView('report')}>Report Issue</button>
+              </li>
             </ul>
           </div>
           

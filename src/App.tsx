@@ -14,6 +14,10 @@ import HelpCenterPage from './pages/HelpCenterPage';
 import SafetyTipsPage from './pages/SafetyTipsPage';
 import ContactUsPage from './pages/ContactUsPage';
 import ReportIssuePage from './pages/ReportIssuePage';
+import AboutUsPage from './pages/AboutUsPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import TermsOfServicePage from './pages/TermsOfServicePage';
+import CareersPage from './pages/CareersPage';
 import LearnMorePage from './pages/LearnMorePage';
 import DashboardPage from './pages/DashboardPage';
 import { AuthProvider, useAuth } from './firebase/AuthProvider';
@@ -92,7 +96,7 @@ export default function App() {
 function AppContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
-  const [view, setView] = useState<'home' | 'login' | 'signup' | 'sell' | 'notifications' | 'messages' | 'browse' | 'trending' | 'learn' | 'dashboard' | 'help' | 'safety' | 'contact' | 'report'>('home');
+  const [view, setView] = useState<'home' | 'login' | 'signup' | 'sell' | 'notifications' | 'messages' | 'browse' | 'trending' | 'learn' | 'dashboard' | 'help' | 'safety' | 'contact' | 'report' | 'about' | 'privacy' | 'terms' | 'careers'>('home');
   const { user } = useAuth();
 
   // Use effect to automatically move to dashboard when user signs in
@@ -238,6 +242,10 @@ function AppContent() {
   {view === 'safety' && <SafetyTipsPage onBack={() => setView('home')} />}
   {view === 'contact' && <ContactUsPage onBack={() => setView('home')} />}
   {view === 'report' && <ReportIssuePage onBack={() => setView('home')} />}
+  {view === 'about' && <AboutUsPage onBack={() => setView('home')} />}
+  {view === 'privacy' && <PrivacyPolicyPage onBack={() => setView('home')} />}
+  {view === 'terms' && <TermsOfServicePage onBack={() => setView('home')} />}
+  {view === 'careers' && <CareersPage onBack={() => setView('home')} />}
 
       {/* Features and CTA are handled above (rendered only for unauthenticated users) */}
     </main>
@@ -248,7 +256,7 @@ function AppContent() {
         <div className="grid md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center gap-2 mb-4">
-              <span className="font-bold text-xl">S</span>
+              <img src="/file.svg" alt="SleekRoad" className="h-6 w-auto" />
               <span className="font-bold text-xl">SleekRoad</span>
             </div>
             <p className="text-gray-400 text-sm">
@@ -287,10 +295,18 @@ function AppContent() {
           <div>
             <h4 className="font-semibold mb-4">Company</h4>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li>About Us</li>
-              <li>Privacy Policy</li>
-              <li>Terms of Service</li>
-              <li>Careers</li>
+              <li>
+                <button className="hover:text-white transition-colors" onClick={() => setView('about')}>About Us</button>
+              </li>
+              <li>
+                <button className="hover:text-white transition-colors" onClick={() => setView('privacy')}>Privacy Policy</button>
+              </li>
+              <li>
+                <button className="hover:text-white transition-colors" onClick={() => setView('terms')}>Terms of Service</button>
+              </li>
+              <li>
+                <button className="hover:text-white transition-colors" onClick={() => setView('careers')}>Careers</button>
+              </li>
             </ul>
           </div>
         </div>

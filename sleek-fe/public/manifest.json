@@ -1,0 +1,26 @@
+{
+  "short_name": "SleekRoad",
+  "name": "SleekRoad Marketplace",
+  "icons": [
+    {
+      "src": "./logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/logo.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "description": "A modern marketplace connecting college students and communities."
+}

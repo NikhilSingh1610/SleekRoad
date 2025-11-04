@@ -1,0 +1,533 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500;700&family=Inter:wght@400;500;600&display=swap');
+
+/* Tailwind layers - required before using @layer rules */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Charlsworth is used for the main brand heading. To use it, place the font files under:
+    public/fonts/charlsworth.woff2
+    public/fonts/charlsworth.woff
+  If you have other file names or formats, update the src URLs below.
+*/
+@font-face {
+  font-family: 'Charlsworth';
+  src: url('/fonts/charlsworth.woff2') format('woff2'),
+       url('/fonts/charlsworth.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+
+:root {
+  --font-size: 16px;
+  --background: #f6e5e5ff;
+  --foreground: oklch(0.145 0 0);
+  --card: #ffffff;
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: #030213;
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.0058 264.53);
+  --secondary-foreground: #030213;
+  --muted: #ececf0;
+  --muted-foreground: #717182;
+  --accent: #e9ebef;
+  --accent-foreground: #030213;
+  --destructive: #d4183d;
+  --destructive-foreground: #ffffff;
+  --input: transparent;
+  --input-background: #f3f3f5;
+  --switch-background: #cbced4;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: #030213;
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  /* focus ring fallback for browsers without Tailwind utility context */
+  :focus {
+    outline: 3px solid rgba(99,102,241,0.15);
+    outline-offset: 2px;
+  }
+
+  body {
+    background: var(--background);
+    color: var(--foreground);
+  }
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h3 {
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h4 {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    p {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+
+    label {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    button {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    input {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+}
+
+/* SleekRoad custom aesthetic tweaks */
+
+:root {
+  /* Beige / Brown brand tokens */
+  --brand-1: #EADFC6; /* light beige */
+  --brand-2: #2b2723ff; /* warm brown */
+  --brand-3: #2a231eff; /* deep brown */
+  --glass-bg: rgba(250,247,242,0.72);
+  --glass-border: rgba(139,94,60,0.08);
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(166,124,82,0.04), transparent 12%),
+              radial-gradient(900px 400px at 90% 90%, rgba(139,94,60,0.03), transparent 10%),
+              linear-gradient(180deg, #FBF9F7 0%, #F7F4F1 100%);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.glass-card {
+  background: linear-gradient(135deg, var(--glass-bg), rgba(255,255,255,0.5));
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px) saturate(1.05);
+  -webkit-backdrop-filter: blur(8px) saturate(1.05);
+  border-radius: 16px;
+}
+
+.brand-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--brand-1), var(--brand-2));
+  box-shadow: 0 6px 14px rgba(139,94,60,0.06), 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.hero-cta {
+  box-shadow: 0 12px 30px rgba(15,23,42,0.12);
+  transform: translateY(0);
+  transition: transform 220ms var(--default-transition-timing-function), box-shadow 220ms var(--default-transition-timing-function);
+}
+.hero-cta:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(15,23,42,0.14);
+}
+
+.brand-title {
+  font-family: 'Poppins', Inter, system-ui, sans-serif;
+  letter-spacing: -0.01em;
+}
+
+/* Display font used for hero headings */
+.font-display {
+  font-family: 'Poppins', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.font-charlsworth {
+  font-family: 'Charlsworth', 'Poppins', Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  font-weight: 500;
+  color: var(--foreground);
+  opacity: 0.92;
+}
+
+
+
+
+/* Brand utility classes */
+.bg-brand {
+  background: linear-gradient(90deg, var(--brand-1), var(--brand-2));
+}
+
+.bg-brand-soft {
+  background: linear-gradient(180deg, rgba(234,223,198,0.9), rgba(250,247,242,0.9));
+}
+
+.btn-brand {
+  background: linear-gradient(90deg, var(--brand-2), var(--brand-3));
+  color: white;
+  box-shadow: 0 10px 28px rgba(139,94,60,0.08);
+}
+/* Accessible focus state for branded buttons */
+.btn-brand:focus {
+  outline: 3px solid rgba(255,255,255,0.08);
+  outline-offset: 2px;
+}
+
+/* Black button utility used for specific CTAs (Search, Sell) */
+.btn-black {
+  background: #000000;
+  color: #ffffff;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.2);
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 120ms ease;
+}
+.btn-black:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 36px rgba(0,0,0,0.28);
+}
+.btn-black:active {
+  transform: translateY(0);
+  opacity: 0.95;
+}
+.btn-black:focus {
+  outline: 3px solid rgba(255,255,255,0.08);
+  outline-offset: 2px;
+}
+
+.badge-brand {
+  background: linear-gradient(90deg, var(--brand-1), rgba(166,124,82,0.2));
+  color: var(--brand-3);
+}
+
+.hero-bg {
+  background: linear-gradient(135deg, rgba(234,223,198,0.8), rgba(250,247,242,0.6));
+}
+
+.blob-beige {
+  background: radial-gradient(circle at 30% 30%, rgba(166,124,82,0.12), transparent 25%),
+              radial-gradient(circle at 70% 70%, rgba(139,94,60,0.08), transparent 20%);
+}
+
+/* Decorative hero blurred shape */
+.hero-decor {
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  transform: translateX(-50%);
+  width: 780px;
+  height: 420px;
+  border-radius: 48% 52% 60% 40% / 50% 40% 60% 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(234,223,198,0.95), transparent 35%),
+              radial-gradient(circle at 70% 70%, rgba(166,124,82,0.06), transparent 40%);
+  filter: blur(40px) saturate(1.05);
+  opacity: 0.85;
+  z-index: 0;
+}
+
+@media (max-width: 640px) {
+  .hero-decor { width: 360px; height: 220px; top: 4%; filter: blur(28px); opacity: 0.8; }
+}
+
+
+
+@media (max-width: 640px) {
+  .container { padding-left: 1rem; padding-right: 1rem; }
+}
+
+
+.footer-dark {
+  background: linear-gradient(180deg, #2a261f 0%, #221e18 100%);
+  color: #e6dfd3;
+}
+
+
+.background-catty {
+  background-image: url('/cat.png');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  background-color: #efe6da; /* fallback beige */
+  
+}
+
+/* Beige segment with cat image for hero */
+.cat-segment {
+  position: relative;
+  height: 220px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-color: #efe6da; /* fallback beige */
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.cat-overlay {
+  position: absolute;
+  inset: 0;
+  /* much lighter overlay so the image remains visible */
+  background: linear-gradient(180deg, rgba(238,230,218,0.28) 0%, rgba(238,230,218,0.12) 40%, rgba(238,230,218,0.06) 100%);
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  .cat-segment { height: 140px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }
+}
+
+@media (min-width: 1024px) {
+  .cat-segment { height: 280px; }
+}
+
+/* Improved decorative cat styles: GPU-friendly and respects reduced-motion */
+.black-cat {
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  filter: grayscale(1) brightness(0.08) contrast(1.2) drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+  opacity: 0.95;
+  z-index: 0;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform-origin: center;
+  transition: transform 420ms cubic-bezier(.22,.9,.3,1), opacity 280ms ease;
+}
+
+
+
+@media (max-width: 640px) {
+  .black-cat { display: none; }
+}
+
+/* Professional animations and transitions */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideInUp 0.7s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s ease-out forwards;
+}
+
+/* Smooth hover effects for cards */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Professional gradient overlays */
+.gradient-overlay {
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  animation: shimmer 3s infinite;
+}
+
+/* Smooth focus states */
+*:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.5);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Professional shadow utilities */
+.shadow-soft {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-medium {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-strong {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Smooth transitions for all interactive elements */
+button, a, input, textarea, select {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Professional loading state */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+

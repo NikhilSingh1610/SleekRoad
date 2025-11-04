@@ -1,5 +1,7 @@
+"use client"
+
 import React from 'react';
-import { Card } from '../components/ui/card';
+import { Card } from '../../../components/ui/card';
 
 export default function TermsOfServicePage({ onBack }: { onBack?: () => void }) {
   return (
@@ -13,7 +15,7 @@ export default function TermsOfServicePage({ onBack }: { onBack?: () => void }) 
             )}
           </div>
 
-ko          <Card className="p-6 border-beige-200 bg-white space-y-6">
+          <Card className="p-6 border-beige-200 bg-white space-y-6">
             <section className="space-y-3">
               <h2 className="text-xl font-semibold text-black">Agreement to Terms</h2>
               <p className="text-beige-800 leading-relaxed">
@@ -127,15 +129,7 @@ ko          <Card className="p-6 border-beige-200 bg-white space-y-6">
               </ul>
             </section>
 
-            <section className="space-y-3">
-              <h2 className="text-xl font-semibold text-black">Dispute Resolution & Governing Law</h2>
-              <ul className="list-disc pl-6 text-beige-800 space-y-2">
-                <li>These Terms are governed by the laws of [Your Jurisdiction], without regard to conflict of law principles.</li>
-                <li>Any disputes arising from these Terms or your use of SleekRoad shall be resolved through binding arbitration or in the courts of [Your Jurisdiction].</li>
-                <li>You waive the right to participate in class actions or class arbitrations.</li>
-              </ul>
-              <p className="text-xs text-beige-700 mt-2">Note: Update jurisdiction details as needed for your location.</p>
-            </section>
+            
 
             <section className="space-y-3">
               <h2 className="text-xl font-semibold text-black">Intellectual Property</h2>

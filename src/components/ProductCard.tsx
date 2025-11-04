@@ -17,6 +17,7 @@ interface Product {
     avatar?: string;
     rating: number;
     verified: boolean;
+    email?: string;
   };
   location: string;
   postedTime: string;
@@ -27,7 +28,7 @@ interface Product {
 interface ProductCardProps {
   product: Product;
   onFavorite?: (productId: string) => void;
-  onMessage?: (productId: string) => void;
+  onMessage?: (productId: string, recipientEmail?: string) => void;
 }
 
 export function ProductCard({ product, onFavorite, onMessage }: ProductCardProps) {
@@ -142,7 +143,7 @@ export function ProductCard({ product, onFavorite, onMessage }: ProductCardProps
         <Button 
           className="w-full gap-2" 
           variant="outline"
-          onClick={() => onMessage?.(product.id)}
+          onClick={() => onMessage?.(product.id, product.seller.email)}
         >
           <MessageCircle className="w-4 h-4" />
           Message Seller

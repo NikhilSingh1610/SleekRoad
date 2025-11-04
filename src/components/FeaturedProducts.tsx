@@ -17,6 +17,8 @@ const featuredProducts = [
       avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612e605?w=32&h=32&fit=crop&crop=face',
       rating: 4.9,
       verified: true
+      ,
+      email: 'sarah.chen@example.edu'
     },
     location: 'Main Campus',
     postedTime: '2h ago',
@@ -35,6 +37,8 @@ const featuredProducts = [
       avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=32&h=32&fit=crop&crop=face',
       rating: 4.7,
       verified: true
+      ,
+      email: 'marcus.lee@example.edu'
     },
     location: 'North Dorms',
     postedTime: '5h ago',
@@ -52,6 +56,8 @@ const featuredProducts = [
       avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=32&h=32&fit=crop&crop=face',
       rating: 4.5,
       verified: false
+      ,
+      email: 'alex.rivera@example.edu'
     },
     location: 'South Campus',
     postedTime: '1d ago',
@@ -70,6 +76,8 @@ const featuredProducts = [
       avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=32&h=32&fit=crop&crop=face',
       rating: 4.8,
       verified: true
+      ,
+      email: 'emma.watson@example.edu'
     },
     location: 'West Hall',
     postedTime: '1d ago',
@@ -88,6 +96,8 @@ const featuredProducts = [
       avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face',
       rating: 4.9,
       verified: true
+      ,
+      email: 'david.kim@example.edu'
     },
     location: 'Engineering Building',
     postedTime: '3h ago',
@@ -105,6 +115,8 @@ const featuredProducts = [
       avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612e605?w=32&h=32&fit=crop&crop=face',
       rating: 5.0,
       verified: true
+      ,
+      email: 'julia.prof@example.edu'
     },
     location: 'Library',
     postedTime: '4h ago',
@@ -115,7 +127,7 @@ const featuredProducts = [
 
 interface FeaturedProductsProps {
   onFavorite?: (productId: string) => void;
-  onMessage?: (productId: string) => void;
+  onMessage?: (productId: string, recipientEmail?: string) => void;
 }
 
 export function FeaturedProducts({ onFavorite, onMessage }: FeaturedProductsProps) {

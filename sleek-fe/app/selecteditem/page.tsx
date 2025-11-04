@@ -7,6 +7,8 @@ import { ProductCard } from '../../components/ProductCard';
 import { useRouter, useSearchParams } from 'next/navigation'; // Import useSearchParams
 import Loader from '../../components/Loader';
 import { useAuth } from '../../firebase/AuthProvider'; // Import useAuth
+import { db } from '../../firebase/firebaseConfig';
+import { collection, query, where, getDocs, addDoc, serverTimestamp } from 'firebase/firestore';
 
 export default function SelectedItemPage() {
 	const searchParams = useSearchParams();
@@ -86,23 +88,81 @@ export default function SelectedItemPage() {
 			return;
 		}
 
-		try {
-			const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/seller/${item.userId}`);
-			if (response.ok) {
-				const data = await response.json();
-				setSellerDetails(data.seller); // Store seller details in state
-				setIsModalOpen(true);
-			} else {
-				console.error('Failed to fetch seller details');
+		// Try backend fetch if URL is configured; otherwise fall back to item.user (if available)
+		const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+		let fetchedSeller = null;
+		if (backendUrl) {
+			try {
+				const response = await fetch(`${backendUrl}/api/seller/${item.userId}`);
+				if (response.ok) {
+					const data = await response.json();
+					fetchedSeller = data.seller;
+				} else {
+					console.warn('Failed to fetch seller details from backend, status:', response.status);
+				}
+			} catch (error) {
+				console.warn('Error fetching seller details from backend:', error);
 			}
-		} catch (error) {
-			console.error('Error fetching seller details:', error);
+		}
+
+		// Fallback to embedded item.user if backend is not available or returned nothing
+		if (!fetchedSeller && item?.user) {
+			fetchedSeller = {
+				name: item.user.name || item.user.username || 'Seller',
+				email: item.user.email || '',
+				phone: item.user.phone || '',
+				avatar: item.user.avatar || '',
+				address: item.user.address || ''
+			};
+		}
+
+		if (fetchedSeller) {
+			setSellerDetails(fetchedSeller);
+			setIsModalOpen(true);
+		} else {
+			alert('Seller contact details are not available at the moment.');
 		}
 	};
 
 	const handleCloseModal = () => {
 		setIsModalOpen(false);
 	};
+
+	// Ensure a conversation exists between the current user and the other email.
+	async function ensureConversation(meEmail, otherEmail) {
+		if (!meEmail || !otherEmail) return null;
+		// find any conversation that contains both participants
+		const q = query(collection(db, 'conversations'), where('participantsEmails', 'array-contains', otherEmail));
+		const snap = await getDocs(q);
+		for (const d of snap.docs) {
+			const data = d.data();
+			const parts = data.participantsEmails || [];
+			if (parts.includes(meEmail) && parts.includes(otherEmail)) return d.id;
+		}
+		// not found -> create
+		const ref = await addDoc(collection(db, 'conversations'), {
+			participantsEmails: [meEmail, otherEmail],
+			createdAt: serverTimestamp(),
+			lastMessage: '',
+			lastUpdated: serverTimestamp(),
+		});
+		return ref.id;
+	}
+
+	async function handleMessageSeller() {
+		if (!user) {
+			router.push('/signin');
+			return;
+		}
+		if (!sellerDetails?.email) {
+			alert('Seller has no contact email available.');
+			return;
+		}
+		const convId = await ensureConversation(user.email || '', sellerDetails.email);
+		setIsModalOpen(false);
+		// navigate to messages page — pass convId as query param
+		router.push(`/messages?convId=${convId}`);
+	}
 
 	useEffect(() => {
 		const fetchItemDetails = async () => {
@@ -294,21 +354,80 @@ export default function SelectedItemPage() {
 				</div>
 			</div>
 
-			{/* Modal for Contact Details */}
+			{/* Modal for Contact Details (upgraded UI + messaging integration) */}
 			{isModalOpen && sellerDetails && (
-				<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-					<div className="bg-white rounded-lg shadow-lg p-6 w-96">
-						<h2 className="text-xl font-bold mb-4">Contact Details</h2>
-						<p className="mb-2"><strong>Name:</strong> {sellerDetails.name}</p>
-						<p className="mb-2"><strong>Email:</strong> {sellerDetails.email}</p>
-						<p className="mb-2"><strong>Phone:</strong> {sellerDetails.phone}</p>
-						<p className="mb-4"><strong>Address:</strong> {sellerDetails.address}</p>
-						<button
-							onClick={() => setIsModalOpen(false)}
-							className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-						>
-							Close
-						</button>
+				<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50 p-4">
+					<div className="w-full max-w-2xl bg-white rounded-2xl shadow-xl overflow-hidden">
+						<div className="flex flex-col md:flex-row">
+							{/* Left: Seller summary */}
+							<div className="md:w-1/3 p-6 bg-gradient-to-b from-green-50 to-white flex flex-col items-center gap-4">
+								<div className="w-24 h-24 rounded-full overflow-hidden border-2 border-gray-200 bg-white flex items-center justify-center">
+									{sellerDetails.avatar ? (
+										<img src={sellerDetails.avatar} alt={sellerDetails.name} className="w-full h-full object-cover" />
+									) : (
+										<span className="text-2xl font-bold text-gray-700">{sellerDetails.name?.charAt(0) || 'S'}</span>
+									)}
+								</div>
+								<h3 className="text-lg font-semibold text-gray-900 text-center">{sellerDetails.name}</h3>
+								<p className="text-sm text-muted-foreground text-center">Verified Seller</p>
+							</div>
+						
+							{/* Right: Contact details and actions */}
+							<div className="md:w-2/3 p-6">
+								<div className="flex items-start justify-between">
+									<div>
+										<h4 className="text-xl font-bold">Contact & chat</h4>
+										<p className="text-sm text-muted-foreground mt-1">Connect with the seller securely through the in-app chat or via email/phone.</p>
+									</div>
+									<div>
+										<button onClick={() => setIsModalOpen(false)} className="text-sm text-gray-500 hover:text-gray-700">Close</button>
+									</div>
+								</div>
+							
+								<div className="mt-6 grid gap-3">
+									<div className="flex items-center gap-3">
+										<svg className="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8.5C3 6.29 4.79 4.5 7 4.5h10c2.21 0 4 1.79 4 4v7c0 2.21-1.79 4-4 4H7c-2.21 0-4-1.79-4-4v-7z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+										<div>
+											<p className="text-sm text-gray-700"><strong>Email</strong></p>
+											<p className="text-sm text-muted-foreground">{sellerDetails.email || 'Not provided'}</p>
+										</div>
+									</div>
+									{sellerDetails.phone && (
+										<div className="flex items-center gap-3">
+											<svg className="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.09 4.18 2 2 0 0 1 4 2h3a2 2 0 0 1 2 1.72c.12 1.05.36 2.07.72 3.03a2 2 0 0 1-.45 2.11L9.91 9.91a16 16 0 0 0 6 6l1.05-1.05a2 2 0 0 1 2.11-.45c.96.36 1.98.6 3.03.72A2 2 0 0 1 22 16.92z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+											<div>
+												<p className="text-sm text-gray-700"><strong>Phone</strong></p>
+												<p className="text-sm text-muted-foreground">{sellerDetails.phone}</p>
+											</div>
+										</div>
+									)}
+									{sellerDetails.address && (
+										<div className="mt-2 text-sm text-muted-foreground">{sellerDetails.address}</div>
+									)}
+								</div>
+							
+								<div className="mt-6 flex flex-col sm:flex-row gap-3">
+									<button
+										className="flex-1 px-4 py-2 rounded-lg bg-black text-white hover:opacity-95"
+										onClick={async () => {
+											await handleMessageSeller();
+										}}
+									>
+										Message seller
+									</button>
+									<button
+										className="flex-1 px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-800 hover:bg-gray-50"
+										onClick={() => {
+										navigator.clipboard?.writeText(sellerDetails.email || '')
+											.then(() => alert('Email copied to clipboard'))
+											.catch(() => alert('Unable to copy'));
+										}}
+									>
+										Copy email
+									</button>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			)}

@@ -97,6 +97,7 @@ function AppContent() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [view, setView] = useState<'home' | 'login' | 'signup' | 'sell' | 'notifications' | 'messages' | 'browse' | 'trending' | 'learn' | 'dashboard' | 'help' | 'safety' | 'contact' | 'report' | 'about' | 'privacy' | 'terms' | 'careers'>('home');
+  const [initialConversationRecipient, setInitialConversationRecipient] = useState<string | undefined>(undefined);
   const { user } = useAuth();
 
   // Use effect to automatically move to dashboard when user signs in
@@ -123,8 +124,10 @@ function AppContent() {
     console.log('Favorited product:', productId);
   };
 
-  const handleMessage = (productId: string) => {
-    console.log('Message seller for product:', productId);
+  const handleMessage = (productId: string, recipientEmail?: string) => {
+    console.log('Message seller for product:', productId, 'recipient:', recipientEmail);
+    setInitialConversationRecipient(recipientEmail);
+    setView('messages');
   };
 
   return (
@@ -233,7 +236,7 @@ function AppContent() {
   {view === 'login' && <LoginPage onBack={() => setView('home')} />}
   {view === 'sell' && <SellPage onBack={() => setView('home')} />}
   {view === 'notifications' && <NotificationsPage onBack={() => setView('home')} />}
-  {view === 'messages' && <MessagesPage onBack={() => setView('home')} />}
+  {view === 'messages' && <MessagesPage onBack={() => { setInitialConversationRecipient(undefined); setView('home'); }} initialRecipientEmail={initialConversationRecipient} />}
   {view === 'browse' && <BrowsePage onBack={() => setView('home')} />}
   {view === 'trending' && <TrendingPage onBack={() => setView('home')} />}
   {view === 'learn' && <LearnMorePage onBack={() => setView('home')} />}
